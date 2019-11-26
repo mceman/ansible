@@ -1,0 +1,44 @@
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: install packages
+      become: true
+      become_method: sudo
+      become_user: root
+      yum:
+        state: present
+        name: 
+          - htop 
+          - vim 
+          - php
+          - filezilla 
+          - bluefish
+      tags:
+        - packages
+    - name: Install php7.3
+      become: true
+      become_method: sudo
+      become_user: root
+      shell: |
+        yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm 
+        yum -y install epel-release yum-utils
+        yum-config-manager --disable remi-php54
+        yum-config-manager --enable remi-php73
+        yum -y install php php-cli php-fpm php-mysqlnd php-zip php-devel php-gd php-mcrypt php-mbstring php-curl php-xml php-pear php-bcmath php-json
+      tags:
+        - packages
+    - name: Download background
+      get_url:
+        url: https://cdn.wallpapersafari.com/55/73/ghY4rc.jpg
+        dest: /tmp/bg.jpg
+        mode: '0644'
+    - name: Change background
+      become: true
+      become_method: sudo
+      become_user: root
+      shell: |
+        cp /tmp/bg.jpg /usr/share/backgrounds/default.jpg
+        cp /tmp/bg.jpg /usr/share/backgrounds/day.jpg
+        cp /tmp/bg.jpg /usr/share/backgrounds/night.jpg
+      tags:
+        - background

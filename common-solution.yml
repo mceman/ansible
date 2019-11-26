@@ -1,0 +1,56 @@
+- name: Install base packages
+  hosts: all
+  become: yes
+
+  vars: #premenne pre servery nizsie
+    servers:
+      - galaxy
+      - vulcan
+      - ameros
+
+  tasks:
+    - name: Update
+      apt:
+        update_cache: yes
+    - name: Apt Key
+      apt_key:
+        url: https://packages.sury.org/php/apt.gpg
+        state: present
+        keyring: /etc/apt/trusted.pg.d/php.gpg
+
+    - name: Add pgp keyring
+      shell:
+        cmd: echo "dev https://packages.sury.org/php/$(lsb_release -sc) main" | sudo tee /etc/apt/trusted.pg.d/php.gpg
+    - name: Install packages
+      apt:
+        name:
+          - htop
+          - vim
+          - php7.3
+          - kazam
+          - filezilla
+          - bluefish
+        state: present #best practice je pisat verzie balickov (latest|present|testing)
+        update_cache: yes 
+        cache_valid_time: 3600
+    - name: Download background
+      get_url:
+        url: https://cdn.wallpapersafari.com/55/73/ghY4rc.jpg
+        dest: /tmp/bg.jpg
+        mode: '0644'    
+
+    - name: Set bg image
+      shell:
+        cmd: pcmanfm --set-wallpaper /home/pi/Pictures/bg.jpg --wallpaper-mode=crop
+      environment: #vars platia pre ansible, vsetko co sa vykonava na control node. Environment je pre dane prostredie na ktorom to bezi.
+        DISPLAY: ":0"
+        XAUTHORITY: "/home/pi/.Xauthority"
+        XDG_RUNTIME: "/run/user/1000" #pre ktoreho pouzivatela to ma bezat
+    
+    - name: Generate files
+      template:
+        src: ./template.j2
+        dest: "/tmp/{{ item }}.txt"
+      with_items: "{{ servers }}" #generovanie templatov
+      tags: 
+        - templates
