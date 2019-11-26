@@ -1,0 +1,7 @@
+---
+- name: Installing software for management
+  hosts: management
+  roles:
+    - common
+    - dev
+    - office

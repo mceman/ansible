@@ -1,0 +1,7 @@
+---
+# vars file for dev
+vars_files:
+  - ../../passwds.yml
+ 
+vars:
+  ansible_become_pass: "{{ ansible_become_pass }}"

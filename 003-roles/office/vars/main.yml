@@ -1,0 +1,7 @@
+---
+# vars file for office
+var_files:
+  - passwds.yml
+ 
+vars:
+  ansible_become_pass: "{{ ansible_become_pass }}"

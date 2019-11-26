@@ -1,0 +1,9 @@
+---
+# tasks file for office
+- name: Install additional packages
+  yum:
+    become: yes
+    state: present
+    name:
+      - libreoffice
+      - pidgin

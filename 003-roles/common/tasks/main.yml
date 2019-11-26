@@ -1,0 +1,12 @@
+---
+# tasks file for common
+- name: install packages
+  become: yes
+  yum:
+    state: present
+    name: 
+      - htop 
+      - vim 
+      - php
+      - filezilla 
+      - bluefish

@@ -1,0 +1,57 @@
+---
+# tasks file for dev
+- name: Remove old files 
+  become: yes
+  yum:
+    state: absent
+    name:
+      - docker
+      - docker-client
+      - docker-client-latest
+      - docker-common
+      - docker-latest
+      - docker-latest-logrotate
+      - docker-logrotate
+      - docker-engine
+    update_cache: yes
+    state: present
+    name:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+
+- name: Add Docker repo
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+  become: yes
+
+- name: Install the docker binaries
+  become: yes
+  yum:
+    state: present
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+
+- name: Add ansible_user to group docker
+  user:
+    name: "{{ ansible_user }}"
+    groups: docker
+  become: yes
+
+- name: Install docker-compose and git
+  become: yes
+  yum:
+    state: present
+    name:
+      - docker-compose
+      - git
+
+- name: Start Docker service
+  service:
+    name: docker
+    state: started
+    enabled: yes
+  become: yes

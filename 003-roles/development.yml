@@ -1,0 +1,9 @@
+---
+- name: Installing software for development
+  hosts: development
+  vars_files:
+    - passwds.yml
+  roles:
+    - common
+    - dev
+  

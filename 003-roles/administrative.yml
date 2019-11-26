@@ -1,0 +1,5 @@
+---
+- hosts: administrative
+  roles:
+    - common
+    - office
